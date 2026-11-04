@@ -203,7 +203,7 @@
       <div class="grid grid-cols-[repeat(3,auto)] justify-between gap-x-8 gap-y-10 min-[90rem]:grid-cols-[1fr_auto_auto_auto] min-[90rem]:justify-normal">
         <div class="col-span-3 min-[90rem]:col-span-1">
           <a aria-label="OFFICE8" class="inline-flex min-h-11 min-w-max items-center" href="${SITE}/"><img alt="OFFICE8" width="208" height="46" decoding="async" class="h-auto w-auto shrink-0 select-none" style="color:transparent;height:46px;width:auto" src="${BASE}assets/img/logo-office8-outline.png"></a>
-          <p class="mt-5 max-w-[280px] text-[14px] leading-relaxed text-slate-500">Маркетплейс коммерческой недвижимости — бизнес-центры, офисы в ЖК, коворкинги и коттеджи в Казахстане.</p>
+          <p class="mt-5 max-w-[280px] text-[14px] leading-relaxed text-slate-500">Маркетплейс коммерческой недвижимости - бизнес-центры, офисы в ЖК, коворкинги и коттеджи в Казахстане.</p>
         </div>
         <div>${col('Помещения')}<ul class="-ml-2 space-y-0.5">${premises.map(lnk).join('')}</ul></div>
         <div>${col('Документация')}<ul class="-ml-2 space-y-0.5">${docs.map(lnk).join('')}</ul></div>
@@ -327,7 +327,7 @@
     <div>
       <span class="reveal inline-flex h-8 items-center gap-2 rounded-full bg-white/10 px-3.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-gold ring-1 ring-white/15">${ic('briefcase', 'size-4')}Услуги Office8</span>
       <h1 class="reveal mt-5 text-[32px] font-bold leading-[1.08] text-white sm:text-[46px] xl:text-[56px]" style="--d:80ms">Услуги в сфере коммерческой <span class="text-gold">недвижимости</span></h1>
-      <p class="reveal mt-5 max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-[17px]" style="--d:160ms">Брокеридж, аналитика, консалтинг и управление объектами — для торговых, офисных, складских, многофункциональных комплексов и гостиниц.</p>
+      <p class="reveal mt-5 max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-[17px]" style="--d:160ms">Брокеридж, аналитика, консалтинг и управление объектами - для торговых, офисных, складских, многофункциональных комплексов и гостиниц.</p>
       <div class="reveal mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap" style="--d:240ms">
         <a href="${wa('Здравствуйте! Хочу обсудить задачу по коммерческой недвижимости.')}" target="_blank" rel="noopener noreferrer" class="${BTN_WHITE}">${brand('wa', 'size-[18px] text-[#1fa855]')}Обсудить задачу</a>
         <a href="#catalog" class="${BTN_GLASS}">Все услуги${ic('arrow-down', 'size-4')}</a>
