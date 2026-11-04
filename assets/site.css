@@ -1,0 +1,185 @@
+/*
+  Office8 — прототип раздела «Услуги».
+  Базовые классы повторяют кастомный CSS сайта (container-page, facade-dark …),
+  остальное — анимации и состояния интерактивных блоков.
+  Базовые правила лежат в слое components (утилиты Tailwind их перекрывают),
+  состояния (активная вкладка, выбранный пункт…) — вне слоёв, чтобы перекрывать утилиты.
+*/
+@layer theme, base, components, utilities;
+
+@layer components {
+  html { background: #f4f6f6; scrollbar-gutter: stable; scroll-behavior: smooth; }
+  html, body { overflow-x: clip; }
+  body {
+    background: #f4f6f6; color: #2c2f36; width: 100%; max-width: 1920px; margin-inline: auto;
+    font-family: "Montserrat", "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  [hidden] { display: none !important; }
+
+  /* --- как на сайте --- */
+  .container-page { width: 100%; max-width: 1920px; margin-inline: auto; padding-inline: 16px; }
+  @media (min-width: 640px) { .container-page { padding-inline: 24px; } }
+  @media (min-width: 1280px) { .container-page { padding-inline: 100px; } }
+  .facade-dark { background: linear-gradient(to right bottom, #0b1f3a 0%, #16375f 50%, #2c2f36 100%); }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+/* ───── состояния и анимации ───── */
+
+  /* --- появление при прокрутке --- */
+  .reveal {
+    opacity: 0; transform: translateY(18px);
+    transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .7s cubic-bezier(.16, 1, .3, 1);
+    transition-delay: var(--d, 0ms);
+  }
+  .reveal.is-in { opacity: 1; transform: none; }
+
+  /* --- герой: медленный наезд камеры и плавающие плашки --- */
+  @keyframes o8-kb { from { transform: scale(1.12); } to { transform: scale(1); } }
+  .hero-kb { animation: o8-kb 16s cubic-bezier(.2, .6, .2, 1) both; transform-origin: 60% 40%; }
+  @keyframes o8-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .floaty { animation: o8-float 6s ease-in-out infinite; animation-delay: var(--d, 0s); }
+  @keyframes o8-pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(201, 166, 107, .55); } 100% { box-shadow: 0 0 0 14px rgba(201, 166, 107, 0); } }
+  .pulse-gold { animation: o8-pulse-ring 2.2s ease-out infinite; }
+
+  /* пока Tailwind собирает стили, страница не мигает «голой» разметкой */
+  html.o8-loading body { opacity: 0; }
+
+  /* --- карточки услуг и фильтр «кто вы» --- */
+  .svc-item { transition: opacity .35s ease, filter .35s ease; }
+  .svc-item.is-dim { opacity: .3; filter: grayscale(.85); }
+  .svc-item.is-match .svc-link { box-shadow: 0 0 0 3px #c9a66b, 0 24px 48px -24px rgba(11, 31, 58, .55); }
+  .match-badge { display: none; }
+  .svc-item.is-match .match-badge { display: inline-flex; }
+  .card-arrow { transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
+  .group:hover .card-arrow { transform: translate(3px, -3px); }
+
+  /* --- бегущая строка партнёров: два одинаковых ряда сдвигаются на свою ширину и начинают заново --- */
+  .marquee { display: flex; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 48px, #000 calc(100% - 48px), transparent); }
+  .marquee-row { display: flex; flex-shrink: 0; align-items: center; justify-content: space-around; min-width: 100%; animation: o8-marquee var(--dur, 40s) linear infinite; }
+  @keyframes o8-marquee { to { transform: translateX(-100%); } }
+  /* высота = база × --k (считается в app.js по пропорциям логотипа); цвет — при наведении */
+  .partner-logo { width: auto; max-width: none; height: calc(var(--k, 1) * 34px); filter: grayscale(1); opacity: .8; transition: filter .3s, opacity .3s; }
+  @media (min-width: 640px) { .partner-logo { height: calc(var(--k, 1) * 42px); } }
+  @media (hover: hover) {
+    .marquee:hover .marquee-row { animation-play-state: paused; }
+    .partner-logo:hover { filter: none; opacity: 1; }
+  }
+
+  /* --- вкладки категорий (scrollspy) --- */
+  .cat-tab[aria-current="true"] { background: #0b1f3a; color: #fff; }
+  .cat-tab[aria-current="true"] .cnt { background: rgba(255, 255, 255, .16); color: #fff; }
+
+  /* --- таймлайн этапов --- */
+  .tl { position: relative; }
+  .tl-track { position: absolute; left: 19px; top: 20px; bottom: 20px; width: 2px; border-radius: 2px; background: #e2e8f0; overflow: hidden; }
+  .tl-fill { position: absolute; inset: 0 0 auto 0; height: var(--p, 0%); background: linear-gradient(#c9a66b, #0b1f3a); transition: height .15s linear; }
+  .tl-dot { transition: background-color .35s, color .35s, border-color .35s, box-shadow .35s; }
+  .tl-step.is-on .tl-dot { background: #0b1f3a; color: #fff; border-color: #0b1f3a; box-shadow: 0 8px 18px -10px rgba(11, 31, 58, .8); }
+
+  /* --- цепочка шагов (эксклюзивный брокеридж) --- */
+  @keyframes o8-chain { 0%, 100% { background: #fff; color: #0f172a; } 8%, 18% { background: #0b1f3a; color: #fff; } }
+  .chain-step { animation: o8-chain 7.5s ease-in-out infinite; animation-delay: var(--d, 0s); }
+
+  /* --- вкладки (фазы, направления) --- */
+  .tab-btn[aria-selected="true"] { background: #0b1f3a; color: #fff; }
+  .tab-btn[aria-selected="true"] .tab-ic { background: rgba(255, 255, 255, .14); color: #c9a66b; }
+  .tab-panel { animation: o8-fade-in .45s cubic-bezier(.16, 1, .3, 1); }
+  @keyframes o8-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .pm-tab .pm-prog { transform: scaleX(0); transform-origin: left; }
+  .pm-running .pm-tab[aria-selected="true"] .pm-prog { animation: o8-prog var(--dur, 7s) linear forwards; }
+  @keyframes o8-prog { to { transform: scaleX(1); } }
+
+  /* --- воронка HBU --- */
+  .hbu-chip { transition: opacity .45s, transform .45s, filter .45s, background-color .45s, color .45s, box-shadow .45s; }
+  .hbu-chip.is-out { opacity: .38; transform: scale(.95); filter: grayscale(1); text-decoration: line-through; }
+  .hbu-chip.is-win { background: #c9a66b; border-color: #c9a66b; color: #fff; box-shadow: 0 12px 26px -12px rgba(201, 166, 107, .95); }
+  .hbu-layer { transition: background-color .45s, color .45s, box-shadow .45s; }
+  .hbu-layer.is-on { background: #0b1f3a; color: #fff; box-shadow: 0 14px 28px -18px rgba(11, 31, 58, .9); }
+  .hbu-layer.is-on .hbu-ic { background: rgba(255, 255, 255, .14); color: #c9a66b; }
+  .hbu-out { opacity: 0; transition: opacity .4s .25s; }
+  .hbu-layer.is-on .hbu-out { opacity: .75; }
+  .hbu-result { opacity: 0; transform: translateY(8px); transition: opacity .5s, transform .5s cubic-bezier(.16, 1, .3, 1); }
+  .hbu-result.is-on { opacity: 1; transform: none; }
+
+  /* --- сценарии финмодели --- */
+  .fm-bar { transition: top .7s cubic-bezier(.16, 1, .3, 1), height .7s cubic-bezier(.16, 1, .3, 1), background-color .4s; }
+  .fm-marker { transition: left .7s cubic-bezier(.16, 1, .3, 1); }
+
+  /* --- переключатели серий на графике --- */
+  .series-chip[aria-pressed="false"] { opacity: .45; }
+
+  /* --- график аналитики --- */
+  .chart-line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2s cubic-bezier(.65, 0, .35, 1), opacity .3s; }
+  .chart-area { opacity: 0; transition: opacity 1.2s .9s; }
+  .is-in .chart-line { stroke-dashoffset: 0; }
+  .is-in .chart-area { opacity: 1; }
+  .chart-line.is-off, .chart-area.is-off { opacity: 0 !important; }
+
+  /* --- схема участников проекта --- */
+  @keyframes o8-dash { to { stroke-dashoffset: -20; } }
+  .hub-line { stroke-dasharray: 4 6; animation: o8-dash 1.4s linear infinite; }
+  .hub-node { transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s; }
+  .hub-node:hover { transform: translateY(-3px); box-shadow: 0 16px 30px -18px rgba(11, 31, 58, .6); }
+
+  /* --- дорожная карта --- */
+  .road-fill { transform: scaleX(0); transform-origin: left; transition: transform 1.8s cubic-bezier(.65, 0, .35, 1) .2s; }
+  .is-in .road-fill { transform: scaleX(1); }
+  .road-node { transition: background-color .4s, color .4s, border-color .4s; transition-delay: var(--d, 0s); }
+  .is-in .road-node { background: #0b1f3a; color: #fff; border-color: #0b1f3a; }
+
+  /* --- конфигуратор Facility Management --- */
+  .cfg-chip { transition: background-color .2s, color .2s, border-color .2s, transform .2s; }
+  .cfg-chip:active { transform: scale(.98); }
+  .cfg-chip .cfg-check { opacity: 0; transform: scale(.6); transition: opacity .2s, transform .2s; }
+  .cfg-chip[aria-pressed="true"] { background: #0b1f3a; border-color: #0b1f3a; color: #fff; }
+  .cfg-chip[aria-pressed="true"] .cfg-ic { background: rgba(255, 255, 255, .14); color: #c9a66b; }
+  .cfg-chip[aria-pressed="true"] .cfg-check { opacity: 1; transform: scale(1); }
+
+  /* --- закрытые предложения --- */
+  .blurred { filter: blur(6px); user-select: none; }
+
+  /* --- мобильное меню --- */
+  .drawer { transition: opacity .25s ease, visibility .25s; }
+  .drawer[aria-hidden="true"] { opacity: 0; visibility: hidden; pointer-events: none; }
+  .drawer-panel { transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
+  .drawer[aria-hidden="true"] .drawer-panel { transform: translateX(100%); }
+  .sheet-panel { transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
+  .drawer[aria-hidden="true"] .sheet-panel { transform: translateY(100%); }
+
+  /* --- плавающие кнопки — правила .fab-low из CSS сайта --- */
+  :root { --bar-bottom: env(safe-area-inset-bottom, 0px); --tray-bottom: 0px; }
+  .fab-low { bottom: calc(var(--bar-bottom) + var(--tray-bottom) + 16px); }
+  @media (min-width: 640px) { .fab-low { bottom: calc(var(--bar-bottom) + var(--tray-bottom) + 24px); } }
+
+  /* --- шапка на телефоне — правила .o8m-* из CSS сайта --- */
+  @media (max-width: 767px) {
+    .o8m-hdr-row { height: 52px !important; padding-inline: 14px !important; }
+    .o8m-hdr-row a[aria-label="OFFICE8"] { min-height: 40px !important; }
+    .o8m-logo-word { height: 20px !important; display: block !important; }
+    .o8m-logo-8, .o8m-admin { display: none !important; }
+    .o8m-cta { border-radius: 9px !important; height: 34px !important; margin-inline-end: 2px !important; padding-inline: 14px !important; font-size: 13px !important; display: inline-flex !important; }
+  }
+  @media (max-width: 359px) {
+    .o8m-hdr-row { gap: 10px !important; padding-inline: 12px !important; }
+    .o8m-logo-word { height: 17px !important; }
+    .o8m-cta { margin-inline-end: 0 !important; padding-inline: 10px !important; font-size: 12px !important; }
+  }
+
+  /* нижняя панель на телефоне не перекрывает контент */
+  @media (max-width: 767px) { body[data-page="service"] { padding-bottom: 76px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .hero-kb, .floaty, .pulse-gold, .chain-step, .hub-line, .marquee-row { animation: none !important; }
+  /* строка партнёров без движения: логотипы в несколько рядов, копия ряда не нужна */
+  .marquee { mask-image: none; }
+  .marquee-row { flex: 0 0 100%; flex-wrap: wrap; justify-content: center; row-gap: 16px; }
+  .marquee-row[aria-hidden="true"] { display: none; }
+  .chart-line { stroke-dashoffset: 0 !important; }
+  .chart-area { opacity: 1 !important; }
+  .road-fill { transform: none !important; }
+  *, ::before, ::after { transition-duration: .001ms !important; animation-duration: .001ms !important; }
+}
