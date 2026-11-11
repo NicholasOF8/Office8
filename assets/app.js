@@ -203,7 +203,7 @@
       <div class="grid grid-cols-[repeat(3,auto)] justify-between gap-x-8 gap-y-10 min-[90rem]:grid-cols-[1fr_auto_auto_auto] min-[90rem]:justify-normal">
         <div class="col-span-3 min-[90rem]:col-span-1">
           <a aria-label="OFFICE8" class="inline-flex min-h-11 min-w-max items-center" href="${SITE}/"><img alt="OFFICE8" width="208" height="46" decoding="async" class="h-auto w-auto shrink-0 select-none" style="color:transparent;height:46px;width:auto" src="${BASE}assets/img/logo-office8-outline.png"></a>
-          <p class="mt-5 max-w-[280px] text-[14px] leading-relaxed text-slate-500">Маркетплейс коммерческой недвижимости - бизнес-центры, офисы в ЖК, коворкинги и коттеджи в Казахстане.</p>
+          <p class="mt-5 max-w-[280px] text-[14px] leading-relaxed text-slate-500">Маркетплейс коммерческой недвижимости — бизнес-центры, офисы в ЖК, коворкинги и коттеджи в Казахстане.</p>
         </div>
         <div>${col('Помещения')}<ul class="-ml-2 space-y-0.5">${premises.map(lnk).join('')}</ul></div>
         <div>${col('Документация')}<ul class="-ml-2 space-y-0.5">${docs.map(lnk).join('')}</ul></div>
@@ -327,7 +327,7 @@
     <div>
       <span class="reveal inline-flex h-8 items-center gap-2 rounded-full bg-white/10 px-3.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-gold ring-1 ring-white/15">${ic('briefcase', 'size-4')}Услуги Office8</span>
       <h1 class="reveal mt-5 text-[32px] font-bold leading-[1.08] text-white sm:text-[46px] xl:text-[56px]" style="--d:80ms">Услуги в сфере коммерческой <span class="text-gold">недвижимости</span></h1>
-      <p class="reveal mt-5 max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-[17px]" style="--d:160ms">Брокеридж, аналитика, консалтинг и управление объектами - для торговых, офисных, складских, многофункциональных комплексов и гостиниц.</p>
+      <p class="reveal mt-5 max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-[17px]" style="--d:160ms">Брокеридж, аналитика, консалтинг и управление объектами — для торговых, офисных, складских, многофункциональных комплексов и гостиниц.</p>
       <div class="reveal mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap" style="--d:240ms">
         <a href="${wa('Здравствуйте! Хочу обсудить задачу по коммерческой недвижимости.')}" target="_blank" rel="noopener noreferrer" class="${BTN_WHITE}">${brand('wa', 'size-[18px] text-[#1fa855]')}Обсудить задачу</a>
         <a href="#catalog" class="${BTN_GLASS}">Все услуги${ic('arrow-down', 'size-4')}</a>
@@ -350,17 +350,8 @@
   </div>
 </section>`;
 
-    // Бегущая строка партнёров (пока в двух местах — после первого экрана и перед подвалом). Второй ряд — копия
-    // для бесшовной петли, скрыт от скринридеров; --k делает широкие логотипы ниже, чтобы все смотрелись соразмерно
-    const partnerRow = copy => `<ul class="marquee-row"${copy ? ' aria-hidden="true"' : ''}>${D.partners.map(p => `<li class="flex shrink-0 items-center px-6 sm:px-8"><img src="${BASE}assets/img/partners/${p.logo}" alt="${copy ? '' : p.name}" width="${p.w}" height="${p.h}" decoding="async" class="partner-logo" style="--k:${((p.h / p.w) ** 0.4 * (p.scale || 1)).toFixed(3)}"></li>`).join('')}</ul>`;
-    const partners = `
-<section class="reveal mt-5 flex flex-col gap-4 ${CARD} py-5 sm:mt-6 sm:py-6 lg:flex-row lg:items-center lg:gap-0">
-  <h2 class="shrink-0 px-5 text-[13px] font-semibold uppercase tracking-[0.08em] text-slate-500 sm:px-6 lg:border-r lg:border-slate-200 lg:py-2.5 lg:pr-8">Наши партнёры</h2>
-  <div class="marquee min-w-0 flex-1" style="--dur:${D.partners.length * 4}s">${partnerRow(false)}${partnerRow(true)}</div>
-</section>`;
-
     const roles = `
-<section id="roles"class="reveal mt-5 rounded-2xl bg-white p-4 ring-1 ring-slate-200/70 sm:mt-6 sm:p-6">
+<section id="roles" class="reveal mt-5 rounded-2xl bg-white p-4 ring-1 ring-slate-200/70 sm:mt-6 sm:p-6">
   <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
     <div>
       <h2 class="${H2}">Подберём услугу под вашу задачу</h2>
@@ -414,16 +405,59 @@
 </section>`;
     }).join('');
 
+    // Бегущая строка партнёров перед подвалом. Второй ряд — копия для бесшовной петли, скрыт от скринридеров;
+    // --k делает широкие логотипы ниже, чтобы все смотрелись соразмерно
+    const partnerRow = copy => `<ul class="marquee-row"${copy ? ' aria-hidden="true"' : ''}>${D.partners.map(p => `<li class="flex shrink-0 items-center px-6 sm:px-8"><img src="${BASE}assets/img/partners/${p.logo}" alt="${copy ? '' : p.name}" width="${p.w}" height="${p.h}" decoding="async" class="partner-logo" style="--k:${((p.h / p.w) ** 0.4 * (p.scale || 1)).toFixed(3)}"></li>`).join('')}</ul>`;
+    const partners = `
+<section class="reveal mt-5 flex flex-col gap-4 ${CARD} py-5 sm:mt-6 sm:py-6 lg:flex-row lg:items-center lg:gap-0">
+  <h2 class="shrink-0 px-5 text-[13px] font-semibold uppercase tracking-[0.08em] text-slate-500 sm:px-6 lg:border-r lg:border-slate-200 lg:py-2.5 lg:pr-8">Наши партнёры</h2>
+  <div class="marquee min-w-0 flex-1" style="--dur:${D.partners.length * 4}s">${partnerRow(false)}${partnerRow(true)}</div>
+</section>`;
+
+    // Портфолио под строкой партнёров. Карточка повторяет карточку объекта из каталога сайта:
+    // фото 4:3 с плашкой площади, название, тип; справка — с 640px, как адрес в каталоге
+    const P = D.portfolio;
+    const sqm = n => `${n.toLocaleString('ru-RU')}&nbsp;м²`;
+    const stat = (t, v) => `<div><dt class="text-[12px] leading-snug text-slate-500">${t}</dt><dd class="mt-1 text-[26px] font-bold leading-none tabular-nums text-slate-900">${v}</dd></div>`;
+    const portfolio = `
+<section id="portfolio" class="scroll-mt-28 pb-2 pt-8 sm:pb-6 sm:pt-12">
+  <div class="reveal flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+    <div class="flex items-start gap-4">
+      <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary/[0.08] text-primary">${ic('briefcase-business', 'size-6')}</span>
+      <div>
+        <h2 class="text-[24px] font-bold leading-tight text-slate-900 sm:text-[30px]">${P.title}</h2>
+        <p class="mt-2 max-w-2xl text-[15px] leading-relaxed text-slate-500">${P.lead}</p>
+      </div>
+    </div>
+    <dl class="flex shrink-0 gap-8 pl-16 lg:pl-0">${stat('Объектов', P.items.length)}${stat('Общая площадь', sqm(P.items.reduce((sum, o) => sum + o.area, 0)))}</dl>
+  </div>
+  <ul class="mt-5 grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3">
+    ${P.items.map((o, i) => `<li class="reveal" style="--d:${(i % 3) * 80}ms">
+      <article class="group flex h-full flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200/70">
+        <div class="relative aspect-[4/3] shrink-0 overflow-hidden bg-slate-100">
+          <img src="${photo(o.img, 900)}" alt="" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
+          <span class="absolute bottom-2 left-2 inline-flex h-6 items-center rounded-full bg-white/90 px-2.5 text-[12px] font-medium tabular-nums text-slate-800 shadow-[0_4px_12px_-6px_rgba(15,23,42,0.6)] ring-1 ring-slate-900/5 backdrop-blur sm:bottom-2.5 sm:left-2.5 sm:h-7 sm:px-3 sm:text-[13px]">${sqm(o.area)}</span>
+        </div>
+        <div class="flex flex-1 flex-col p-2.5 sm:p-4">
+          <h3 class="text-[15px] font-semibold leading-5 text-slate-900 sm:text-[18px] sm:leading-6">${o.name}</h3>
+          <p class="mt-0.5 flex gap-1.5 text-[12px] font-medium leading-4 text-primary sm:mt-1 sm:text-[14px] sm:leading-5">${ic(o.icon, 'size-3.5 shrink-0 sm:mt-[2px] sm:size-4')}<span>${o.type}</span></p>
+          <p class="mt-2 text-[14px] leading-snug text-slate-600 max-sm:hidden">${o.note}</p>
+        </div>
+      </article>
+    </li>`).join('')}
+  </ul>
+</section>`;
+
     return `
 <main class="flex-1">
   <div class="container-page pb-6 pt-4 sm:pt-6">
     ${hero}
-    ${partners}
     ${roles}
     ${tabs}
     ${sections}
     ${ctaBlock('Не нашли нужную услугу?', 'Расскажите о задаче — подскажем, с чего начать и какие услуги понадобятся именно вашему объекту.', 'Здравствуйте! Хочу обсудить задачу по коммерческой недвижимости.')}
     ${partners}
+    ${portfolio}
   </div>
 </main>`;
   }
